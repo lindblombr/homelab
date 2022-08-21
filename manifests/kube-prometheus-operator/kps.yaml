@@ -1,0 +1,65 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: HelmRepository
+metadata:
+  name: prometheus-community
+  namespace: kube-prometheus-stack
+spec:
+  interval: 60m
+  url: https://charts.jetstack.io
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: kube-prometheus-stack
+  namespace: kube-prometheus-stack
+spec:
+  interval: 30m
+  chart:
+    spec:
+      chart: kube-prometheus-stack
+      version: '1.9.1'
+      sourceRef:
+        kind: HelmRepository
+        name: kube-prometheus-stack
+      interval: 30m
+  values:
+    alertmanager:
+      ingress:
+        enabled: true
+          annotations:
+            cert-manager.io/cluster-issuer: lab-issuer
+        hosts:
+          - alertmanager.lab0.local
+        paths:
+          - /
+        tls:
+          - secretName: alertmanager-tls
+            hosts:
+              - alertmanager.lab0.local
+    grafana:
+      ingress:
+        enabled: true
+          annotations:
+            cert-manager.io/cluster-issuer: lab-issuer
+        hosts:
+          - grafana.lab0.local
+        paths:
+          - /
+        tls:
+          - secretName: grafana-tls
+            hosts:
+              - grafana.lab0.local
+    prometheus:
+      ingress:
+        enabled: true
+          annotations:
+            cert-manager.io/cluster-issuer: lab-issuer
+        hosts:
+          - prometheus.lab0.local
+        paths:
+          - /
+        tls:
+          - secretName: prometheus-tls
+            hosts:
+              - prometheus.lab0.local
