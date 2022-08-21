@@ -27,8 +27,8 @@ spec:
     alertmanager:
       ingress:
         enabled: true
-          annotations:
-            cert-manager.io/cluster-issuer: lab-issuer
+        annotations:
+          cert-manager.io/cluster-issuer: lab-issuer
         hosts:
           - alertmanager.lab0.local
         paths:
@@ -40,8 +40,8 @@ spec:
     grafana:
       ingress:
         enabled: true
-          annotations:
-            cert-manager.io/cluster-issuer: lab-issuer
+        annotations:
+          cert-manager.io/cluster-issuer: lab-issuer
         hosts:
           - grafana.lab0.local
         paths:
@@ -53,8 +53,8 @@ spec:
     prometheus:
       ingress:
         enabled: true
-          annotations:
-            cert-manager.io/cluster-issuer: lab-issuer
+        annotations:
+          cert-manager.io/cluster-issuer: lab-issuer
         hosts:
           - prometheus.lab0.local
         paths:
