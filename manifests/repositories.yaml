@@ -1,0 +1,34 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: HelmRepository
+metadata:
+  name: jetstack
+  namespace: default
+spec:
+  interval: 1m0s
+  provider: generic
+  timeout: 60s
+  url: https://charts.jetstack.io
+---
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: HelmRepository
+metadata:
+  name: ghcr-ingress-nginx
+  namespace: default
+spec:
+  interval: 1m0s
+  provider: generic
+  timeout: 60s
+  type: oci
+  url: oci://ghcr.io/nginxinc/charts
+---
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: HelmRepository
+metadata:
+  name: prometheus-community
+  namespace: default
+spec:
+  interval: 1m0s
+  provider: generic
+  timeout: 60s
+  url: https://prometheus-community.github.io/helm-charts
