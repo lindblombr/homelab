@@ -1,31 +1,36 @@
 ---
-apiVersion: source.toolkit.fluxcd.io/v1beta2
-kind: HelmRepository
-metadata:
-  name: prometheus-community
-  namespace: kube-prometheus-stack
-spec:
-  interval: 60m
-  url: https://prometheus-community.github.io/helm-charts
----
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
   name: kube-prometheus-stack
-  namespace: kube-prometheus-stack
+  namespace: default
 spec:
   interval: 30m
+  targetNamespace: kube-prometheus-stack
+  install:
+    createNamespace: true
   chart:
     spec:
       chart: kube-prometheus-stack
-      version: '>=39.8.0'
+      version: '>=50.0.0'
       sourceRef:
         kind: HelmRepository
         name: prometheus-community
       interval: 30m
   values:
     alertmanager:
+      alertmanagerSpec:
+        storage:
+          volumeClaimTemplate:
+            spec:
+              storageClassName: local-path
+              accessModes: ["ReadWriteOnce"]
+              resources:
+                requests:
+                  storage: 20Gi
+            selector: {}
       ingress:
+        ingressClassName: nginx
         enabled: true
         annotations:
           cert-manager.io/cluster-issuer: lab-issuer
@@ -39,22 +44,33 @@ spec:
               - alertmanager.lab0.local
     grafana:
       ingress:
-        enabled: true
+        ingressClassName: nginx
         annotations:
           cert-manager.io/cluster-issuer: lab-issuer
+        enabled: true
         hosts:
           - grafana.lab0.local
-        paths:
-          - /
+        path: /
         tls:
           - secretName: grafana-tls
             hosts:
               - grafana.lab0.local
     prometheus:
+      prometheusSpec:
+        storageSpec:
+          volumeClaimTemplate:
+            spec:
+              storageClassName: local-path
+              accessModes: ["ReadWriteOnce"]
+              resources:
+                requests:
+                  storage: 50Gi
+            selector: {}
       ingress:
-        enabled: true
+        ingressClassName: nginx
         annotations:
           cert-manager.io/cluster-issuer: lab-issuer
+        enabled: true
         hosts:
           - prometheus.lab0.local
         paths:
@@ -63,3 +79,6 @@ spec:
           - secretName: prometheus-tls
             hosts:
               - prometheus.lab0.local
+    prometheus-node-exporter:
+      hostRootFsMount:
+        enabled: false

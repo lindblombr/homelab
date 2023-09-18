@@ -3,7 +3,7 @@ apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
   name: default
-  namespace: ingress
+  namespace: ingress-nginx
 spec:
   secretName: default-tls
   duration: 8640h # 360d
@@ -23,7 +23,7 @@ spec:
   dnsNames:
     - lab0.local
   uris:
-    - spiffe://cluster.local/ns/ingress/sa/nginx-ingress-microk8s-serviceaccount
+    - spiffe://cluster.local/ns/ingress-nginx/sa/ingress-nginx-nginx-ingress
   ipAddresses:
     - 192.168.50.200
   issuerRef:
