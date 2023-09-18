@@ -20,6 +20,7 @@ spec:
   values:
     alertmanager:
       alertmanagerSpec:
+        routePrefix: /alertmanager
         storage:
           volumeClaimTemplate:
             spec:
@@ -33,30 +34,30 @@ spec:
         ingressClassName: nginx
         enabled: true
         annotations:
-          cert-manager.io/cluster-issuer: lab-issuer
+          nginx.org/mergeable-ingress-type: "minion"
         hosts:
-          - alertmanager.lab0.local
+          - lab0.local
         paths:
-          - /
-        tls:
-          - secretName: alertmanager-tls
-            hosts:
-              - alertmanager.lab0.local
+          - /alertmanager
+        tls: []
     grafana:
+      grafana.ini:
+        server:
+          domain: lab0.local
+          root_url: "%(protocol)s://%(domain)s/grafana"
+          serve_from_sub_path: true
       ingress:
         ingressClassName: nginx
         annotations:
-          cert-manager.io/cluster-issuer: lab-issuer
+          nginx.org/mergeable-ingress-type: "minion"
         enabled: true
         hosts:
-          - grafana.lab0.local
-        path: /
-        tls:
-          - secretName: grafana-tls
-            hosts:
-              - grafana.lab0.local
+          - lab0.local
+        path: /grafana
+        tls: []
     prometheus:
       prometheusSpec:
+        routePrefix: /prometheus
         storageSpec:
           volumeClaimTemplate:
             spec:
@@ -69,16 +70,13 @@ spec:
       ingress:
         ingressClassName: nginx
         annotations:
-          cert-manager.io/cluster-issuer: lab-issuer
+          nginx.org/mergeable-ingress-type: "minion"
         enabled: true
         hosts:
-          - prometheus.lab0.local
+          - lab0.local
         paths:
-          - /
-        tls:
-          - secretName: prometheus-tls
-            hosts:
-              - prometheus.lab0.local
+          - /prometheus
+        tls: []
     prometheus-node-exporter:
       hostRootFsMount:
         enabled: false
