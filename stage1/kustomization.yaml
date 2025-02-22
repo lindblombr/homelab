@@ -1,3 +1,4 @@
 resources:
+  - repositories.yaml
   - cert-manager.yaml
   - stage2.yaml

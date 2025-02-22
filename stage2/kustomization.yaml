@@ -1,4 +1,3 @@
 resources:
-  - ./repositories.yaml
   - ./issuer.yaml
   - ./charts.yaml
