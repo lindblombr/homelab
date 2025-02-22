@@ -1,5 +1,3 @@
 resources:
   - ./repositories.yaml
   - ./cert-manager
-  - ./ingress
-  - ./kube-prometheus-stack

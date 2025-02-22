@@ -15,11 +15,16 @@ spec:
         app: registry
         name: registry
     spec:
-      nodeSelector:
-        node-type: worker
       containers:
       - name: registry
         image: registry:2
+        env:
+#        - name: REGISTRY_LOG_LEVEL
+#          value: debug
+        - name: REGISTRY_HTTP_HOST
+          value: https://lab0.local
+#        - name: REGISTRY_HTTP_RELATIVEURLS
+#          value: "true"
         ports:
         - containerPort: 5000
         volumeMounts:

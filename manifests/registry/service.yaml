@@ -6,7 +6,7 @@ metadata:
 spec:
   selector:
     app: registry
-  type: LoadBalancer
+  type: ClusterIP
   ports:
     - name: docker-port
       protocol: TCP
