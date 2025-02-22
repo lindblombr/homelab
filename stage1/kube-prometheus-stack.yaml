@@ -2,7 +2,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: cert-manager
+  name: kube-prometheus-stack
   namespace: default
 spec:
   interval: 30m
@@ -11,12 +11,10 @@ spec:
     createNamespace: true
   chart:
     spec:
-      chart: ./charts/cert-manager
+      chart: ./charts/kube-prometheus-stack
       reconcileStrategy: Revision
       sourceRef:
         kind: GitRepository
         name: homelab
         namespace: flux-system
       interval: 30m
-  values:
-    installCRDs: true

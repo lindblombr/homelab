@@ -1,4 +1,5 @@
 resources:
   - repositories.yaml
   - cert-manager.yaml
+  - kube-prometheus-stack.yaml
   - stage2.yaml
