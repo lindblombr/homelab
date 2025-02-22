@@ -21,5 +21,5 @@ spec:
       interval: 30m
   values:
     enablePrometheus: true
-    enableCertManager: true
+    enableCertManager: false
     enableVisibilityAPF: true
