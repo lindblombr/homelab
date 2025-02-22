@@ -12,7 +12,7 @@ spec:
   chart:
     spec:
       chart: ./charts/kube-prometheus-stack
-      reconcileStrategy: Revision
+      reconcileStrategy: ChartVersion
       sourceRef:
         kind: GitRepository
         name: homelab
