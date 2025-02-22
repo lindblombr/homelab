@@ -1,0 +1,25 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: kueue
+  namespace: default
+spec:
+  interval: 30m
+  targetNamespace: kueue-system
+  releaseName: kueue
+  install:
+    createNamespace: true
+  chart:
+    spec:
+      chart: ./charts/kueue
+      reconcileStrategy: Revision
+      sourceRef:
+        kind: GitRepository
+        name: homelab
+        namespace: flux-system
+      interval: 30m
+  values:
+    enablePrometheus: true
+    enableCertManager: true
+    enableVisibilityAPF: true
