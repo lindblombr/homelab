@@ -1,0 +1,78 @@
+---
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: EnvoyProxy
+metadata:
+  name: proxy
+  namespace: kube-system
+spec:
+  logging:
+    level:
+      default: warn
+  provider:
+    type: Kubernetes
+    kubernetes:
+      envoyDeployment:
+        # [client] -> [host]{port} -> [control-plane-container]{port}(envoy-gateway)
+        # Use hostNetwork so we can accept connections on the host which
+        # map to the envoy-proxy listener ports
+        patch:
+          type: StrategicMerge
+          value:
+            spec:
+              template:
+                spec:
+                  dnsPolicy: ClusterFirstWithHostNet
+                  hostNetwork: true
+        # we have an explicit portmapping from the host to the control-plane container, so
+        # we force envoy-proxy pods to run in the control-plane, using its network, so we can
+        # forward to envoy-proxy's ports
+        pod:
+          nodeSelector:
+            tier: control-plane
+          tolerations:
+          - effect: NoSchedule
+            key: node-role.kubernetes.io/control-plane
+      # We don't really need this for connectivity outside out of the cluster, so ClusterIP
+      # keeps this non-blocking
+      envoyService:
+        externalTrafficPolicy: Local
+        type: ClusterIP
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: GatewayClass
+metadata:
+  name: eg
+spec:
+  controllerName: gateway.envoyproxy.io/gatewayclass-controller
+  parametersRef:
+    group: gateway.envoyproxy.io
+    kind: EnvoyProxy
+    name: proxy
+    namespace: kube-system
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: eg
+  namespace: kube-system
+# Our unsafe, multi-tenant 80/443 gateway for all HTTP/TLS Routes defined
+spec:
+  gatewayClassName: eg
+  listeners:
+  - allowedRoutes:
+      namespaces:
+        from: All
+    hostname: lab0.local
+    name: http
+    port: 80
+    protocol: HTTP
+  - allowedRoutes:
+      namespaces:
+        from: All
+    hostname: lab0.local
+    name: https
+    port: 443
+    protocol: TLS
+    tls:
+      mode: Passthrough
+

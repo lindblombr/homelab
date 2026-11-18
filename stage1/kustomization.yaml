@@ -1,4 +1,5 @@
 resources:
   - cert-manager.yaml
+  - envoy-gateway.yaml
   - kube-prometheus-stack.yaml
   - stage2.yaml

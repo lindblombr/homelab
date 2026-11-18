@@ -1,5 +1,5 @@
 ---
-apiVersion: helm.toolkit.fluxcd.io/v2beta1
+apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: kube-prometheus-stack
@@ -10,11 +10,9 @@ spec:
   install:
     createNamespace: true
   chart:
+    kind: OCIRepository
     spec:
-      chart: ./charts/kube-prometheus-stack
-      reconcileStrategy: ChartVersion
-      sourceRef:
-        kind: GitRepository
-        name: homelab
-        namespace: flux-system
-      interval: 30m
+      interval: 6h
+      url: oci://ghcr.io/prometheus-community/charts/kube-prometheus-stack
+      ref:
+        semver: '93.4.*'

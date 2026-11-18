@@ -1,5 +1,5 @@
 ---
-apiVersion: helm.toolkit.fluxcd.io/v2beta1
+apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: cert-manager
@@ -10,13 +10,11 @@ spec:
   install:
     createNamespace: true
   chart:
+    kind: OCIRepository
     spec:
-      chart: ./charts/cert-manager
-      reconcileStrategy: ChartVersion
-      sourceRef:
-        kind: GitRepository
-        name: homelab
-        namespace: flux-system
-      interval: 30m
+      interval: 6h
+      url: oci://quay.io/jetstack/charts/cert-manager
+      ref:
+        semver: '1.21.*'
   values:
     installCRDs: true
