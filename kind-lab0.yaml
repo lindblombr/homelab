@@ -1,0 +1,38 @@
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+name: lab0
+networking:
+  apiServerAddress: "192.168.4.252"
+  apiServerPort: 6443
+  kubeProxyMode: "nftables"
+nodes:
+- role: control-plane
+  # Let's us forward connections on this host's 80/443 to an envoy-proxy pod on the
+  # control plane, listening on 10080/10443 to handle ingress
+  extraPortMappings:
+  - containerPort: 10080
+    hostPort: 80
+    protocol: TCP
+  - containerPort: 10443
+    hostPort: 443
+    protocol: TCP
+  labels:
+    tier: control-plane
+- role: worker
+  extraMounts:
+  - hostPath: /data/worker-0
+    containerPath: /data
+  labels:
+    tier: worker
+- role: worker
+  extraMounts:
+  - hostPath: /data/worker-1
+    containerPath: /data
+  labels:
+    tier: worker
+- role: worker
+  extraMounts:
+  - hostPath: /data/worker-2
+    containerPath: /data
+  labels:
+    tier: worker
