@@ -20,19 +20,19 @@ nodes:
     tier: control-plane
 - role: worker
   extraMounts:
-  - hostPath: /data/worker-0
+  - hostPath: /data/volumes/worker-0
     containerPath: /data
   labels:
     tier: worker
 - role: worker
   extraMounts:
-  - hostPath: /data/worker-1
+  - hostPath: /data/volumes/worker-1
     containerPath: /data
   labels:
     tier: worker
 - role: worker
   extraMounts:
-  - hostPath: /data/worker-2
+  - hostPath: /data/volumes/worker-2
     containerPath: /data
   labels:
     tier: worker
